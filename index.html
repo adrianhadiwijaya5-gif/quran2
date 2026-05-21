@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Tarteel Engine - Continuous Mushaf</title>
+    <title>AI Tarteel Engine - Continuous Flow Mushaf</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Font Al-Qur'an Standar Mushaf */
         .font-mushaf { 
             font-family: 'Amiri Quran', serif; 
             font-size: 2.5rem; 
@@ -19,14 +18,14 @@
         }
         .font-sans-custom { font-family: 'Plus Jakarta Sans', sans-serif; }
         
-        /* State Efek Tarteel: Ayat Tersembunyi/Samar di Awal */
+        /* State Efek Tarteel: Ayat Standby (Samar-samar) */
         .status-standby { filter: blur(7px); opacity: 0.08; transition: all 0.5s ease; }
         .status-focus { filter: blur(0px) !important; opacity: 0.4 !important; color: #64748b !important; }
         
         /* State 3 Warna Koreksi */
-        .status-correct { color: #10b981 !important; filter: blur(0px) !important; opacity: 1 !important; font-weight: bold; } /* Hijau */
-        .status-warning { color: #f97316 !important; filter: blur(0px) !important; opacity: 1 !important; } /* Oranye */
-        .status-wrong { color: #ef4444 !important; filter: blur(0px) !important; opacity: 1 !important; font-weight: bold; } /* Merah */
+        .status-correct { color: #10b981 !important; filter: blur(0px) !important; opacity: 1 !important; font-weight: bold; } 
+        .status-warning { color: #f97316 !important; filter: blur(0px) !important; opacity: 1 !important; } 
+        .status-wrong { color: #ef4444 !important; filter: blur(0px) !important; opacity: 1 !important; font-weight: bold; } 
         
         /* Lingkaran Nomor Ayat Khas Mushaf */
         .mushaf-ayah-badge {
@@ -55,8 +54,8 @@
                     <i class="fa-solid fa-microphone-lines text-base"></i>
                 </div>
                 <div>
-                    <span class="font-bold text-sm tracking-wide bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">TARTEEL VERTICAL ENGINE</span>
-                    <p class="text-[9px] text-slate-500 font-mono tracking-wider">CONTINUOUS TEXT PAGE Layout</p>
+                    <span class="font-bold text-sm tracking-wide bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">TARTEEL FLOW ENGINE</span>
+                    <p class="text-[9px] text-slate-500 font-mono tracking-wider">AUTO-ADVANCE ON ERROR MODE</p>
                 </div>
             </div>
             
@@ -78,7 +77,7 @@
             <div class="w-full md:w-1/3">
                 <label id="lblInput" class="text-[9px] font-bold uppercase tracking-wider text-slate-500 block mb-1 font-mono">Nomor Surah (1-114)</label>
                 <div class="flex gap-1.5">
-                    <input type="text" id="inpLinkAyat" placeholder="Contoh: 95 untuk At-Tin" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-center font-bold font-mono text-xs text-slate-100 focus:outline-none focus:border-emerald-500 placeholder-slate-700 transition-colors">
+                    <input type="text" id="inpLinkAyat" placeholder="Contoh: 95 atau 108" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-center font-bold font-mono text-xs text-slate-100 focus:outline-none focus:border-emerald-500 placeholder-slate-700 transition-colors">
                     <button onclick="loadSurahTarteel()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 rounded-xl text-xs transition cursor-pointer shadow-md">
                         Muat
                     </button>
@@ -86,16 +85,16 @@
             </div>
 
             <div class="w-full md:w-1/3 text-center">
-                <span id="lblVoice" class="text-[9px] font-bold uppercase tracking-wider text-slate-500 block mb-1 font-mono">Kontrol Engine</span>
+                <span id="lblVoice" class="text-[9px] font-bold uppercase tracking-wider text-slate-500 block mb-1 font-mono">Kontrol Engine (Mengalir Otomatis)</span>
                 <button id="btnTarteelVoice" onclick="toggleTarteelVoiceEngine()" class="w-full bg-slate-800 text-slate-200 hover:text-white py-2 rounded-xl text-xs font-bold cursor-pointer transition hover:bg-slate-700 border border-slate-700 flex justify-center items-center gap-2">
                     <i id="iconVoiceEngine" class="fa-solid fa-play text-emerald-400 text-[10px]"></i> <span id="txtVoiceEngine">Mulai Mode Membaca</span>
                 </button>
             </div>
 
             <div id="boxParameter" class="bg-slate-950 p-2 rounded-xl border border-slate-900 flex justify-around w-full md:w-1/3 text-center text-[9px] font-mono transition-colors">
-                <div><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block mr-1"></span><span id="pAman" class="text-slate-400">Hijau</span></div>
-                <div><span class="w-1.5 h-1.5 rounded-full bg-orange-500 inline-block mr-1"></span><span id="pToleransi" class="text-slate-400">Oranye</span></div>
-                <div><span class="w-1.5 h-1.5 rounded-full bg-red-500 inline-block mr-1"></span><span id="pSalah" class="text-slate-400">Merah</span></div>
+                <div><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block mr-1"></span><span id="pAman" class="text-slate-400">Lancar</span></div>
+                <div><span class="w-1.5 h-1.5 rounded-full bg-orange-500 inline-block mr-1"></span><span id="pToleransi" class="text-slate-400">Kurang Tepat</span></div>
+                <div><span class="w-1.5 h-1.5 rounded-full bg-red-500 inline-block mr-1"></span><span id="pSalah" class="text-slate-400">Salah / Terlewat</span></div>
             </div>
         </div>
 
@@ -106,13 +105,13 @@
 
         <div id="mushafCard" class="bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl overflow-hidden transition-colors">
             <div id="mushafHeader" class="p-4 bg-slate-900 border-b border-slate-800 text-center transition-colors">
-                <h2 id="txtNamaSurah" class="font-bold text-xs uppercase tracking-widest text-slate-400 font-mono">MUSHAF MAJU VERTIKAL</h2>
+                <h2 id="txtNamaSurah" class="font-bold text-xs uppercase tracking-widest text-slate-400 font-mono">MUSHAF BERKELANJUTAN</h2>
             </div>
 
             <div id="mushafAreaContainer" class="p-8 md:p-12 min-h-[50vh] max-h-[75vh] overflow-y-auto text-right select-none" dir="rtl">
                 <div id="mushafPlaceholder" class="text-center py-20 text-slate-600 space-y-2" dir="ltr">
                     <i class="fa-solid fa-book-open text-4xl text-slate-800"></i>
-                    <p class="text-xs max-w-xs mx-auto">Ketik nomor surah lalu klik **Muat**. Ayat akan menyatu vertikal ke bawah tanpa kotak pembatas.</p>
+                    <p class="text-xs max-w-xs mx-auto">Ketik nomor surah lalu klik **Muat**. Bacaan salah tidak akan mengunci, melainkan langsung lompat ke ayat selanjutnya.</p>
                 </div>
                 
                 <div id="mushafParagraphContent" class="font-mushaf hidden text-justify whitespace-normal tracking-wide"></div>
@@ -126,11 +125,11 @@
         let isEngineMendengar = false;
         let indexAyatFokusTracker = 0;
         let modeLayarGelap = true;
+        let sisaKataTerdeteksiCache = ""; // Menyimpan kata sisa agar pencocokan ayat kontinu stabil
 
-        // --- DUAL-THEME LAYOUT SWITCHER ---
+        // --- THEME ENGINE ---
         function toggleTemaLayar() {
             modeLayarGelap = !modeLayarGelap;
-            
             const body = document.getElementById('bodyApp');
             const nav = document.getElementById('navApp');
             const panel = document.getElementById('panelKontrol');
@@ -143,7 +142,6 @@
             const inputField = document.getElementById('inpLinkAyat');
 
             if (!modeLayarGelap) {
-                // TEMA TERANG (Light Mode) - Seperti kertas Al-Qur'an fisik putih/krem bersih
                 body.className = "bg-slate-100 text-slate-900 font-sans-custom min-h-screen antialiased transition-colors duration-300";
                 nav.className = "bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm transition-colors duration-300";
                 panel.className = "bg-white p-4 rounded-2xl border border-slate-200 shadow grid grid-cols-1 md:grid-cols-3 gap-4 items-center transition-colors";
@@ -159,7 +157,6 @@
                 document.getElementById('lblVoice').className = "text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-1 font-mono";
                 document.getElementById('pAman').className = "text-slate-500"; document.getElementById('pToleransi').className = "text-slate-500"; document.getElementById('pSalah').className = "text-slate-500";
             } else {
-                // TEMA GELAP (Dark Mode)
                 body.className = "bg-slate-950 text-slate-100 font-sans-custom min-h-screen antialiased transition-colors duration-300";
                 nav.className = "bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-xl transition-colors duration-300";
                 panel.className = "bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow-2xl grid grid-cols-1 md:grid-cols-3 gap-4 items-center transition-colors";
@@ -189,7 +186,7 @@
             });
         }
 
-        // --- RENDERING PARAGRAF KONTINU (SEPERTI IMAGE_7EF1B5.PNG) ---
+        // --- MUSHAF LOADER ---
         async function loadSurahTarteel() {
             const input = document.getElementById('inpLinkAyat').value.trim();
             if(!input) return;
@@ -220,10 +217,8 @@
                     placeholder.classList.add('hidden');
                     textContainer.classList.remove('hidden');
                     
-                    textContainer.innerHTML = ""; // Reset isi teks sebelumnya
+                    textContainer.innerHTML = ""; 
                     dataAyatSurahAktif = [];
-
-                    // Jika bukan Al-Fatihah atau At-Taubah, bisa ditambahkan penanda Bismillah di atas textContainer jika diperlukan
                     let fullHTMLString = "";
 
                     json.data[0].ayahs.forEach((ayah, idx) => {
@@ -232,17 +227,15 @@
 
                         if(nomorAyat === 1 && surahNum !== 1 && surahNum !== 9 && textArabClean.startsWith("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ")) {
                             textArabClean = textArabClean.replace("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ", "");
-                            // Tampilkan Bismillah sebagai pembuka blok kontinu di baris tersendiri
                             fullHTMLString += `<div class="text-center w-full block mb-6 text-slate-400 font-mushaf">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>`;
                         }
 
                         dataAyatSurahAktif.push({
                             nomor: nomorAyat,
-                            teksAsli: textArabClean.replace(/[\u064B-\u0652]/g, ""), 
+                            teksAsli: textArabClean.replace(/[\u064B-\u0652]/g, "").trim(), 
                             teksTampil: textArabClean
                         });
 
-                        // Setiap ayat dibungkus span agar menyatu mengalir secara vertikal & horizontal tanpa ganti baris paksa
                         fullHTMLString += `
                             <span id="target-arab-${nomorAyat}" class="status-standby inline">
                                 ${textArabClean}
@@ -262,7 +255,7 @@
             }
         }
 
-        // --- ENGINE AUDIO SPEECH RECOGNITION ---
+        // --- ENGINE AUDIO SPEECH ENGINE ---
         function toggleTarteelVoiceEngine() {
             if (dataAyatSurahAktif.length === 0) {
                 alert("Muat surah terlebih dahulu!");
@@ -325,6 +318,7 @@
             } else {
                 resetSemuaWarnaTarteel();
                 indexAyatFokusTracker = 0;
+                sisaKataTerdeteksiCache = "";
                 speechEngine.start();
             }
         }
@@ -346,37 +340,69 @@
             const el = document.getElementById(`target-arab-${noAyat}`);
             if(el) {
                 el.className = "status-focus inline";
-                // Menggulung layar secara halus tepat ke kata yang sedang dibaca agar tetap berada di tengah layar
                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
 
-        // Logic String Matcher 3 Warna Real-Time
+        // --- INTERACTION LOGIC (AUTO-ADVANCE NO LOCKS) ---
         function prosesEvaluasiTarteelAI(suaraUser) {
             if(indexAyatFokusTracker >= dataAyatSurahAktif.length) return;
 
             let ayatTarget = dataAyatSurahAktif[indexAyatFokusTracker];
             let teksBersihSuara = suaraUser.trim().replace(/[\u064B-\u0652]/g, "");
 
-            let skorKemiripan = hitungKemiripanTeks(teksBersihSuara, ayatTarget.teksAsli);
+            // Gabungkan sisa cache kata sebelumnya jika ada untuk menghindari miss-match
+            let teksDiuji = (sisaKataTerdeteksiCache + " " + teksBersihSuara).trim();
+            let kataTargetArray = ayatTarget.teksAsli.split(' ');
+            
+            let jumlahKataCocok = 0;
+            let kataUserArray = teksDiuji.split(' ');
+
+            kataUserArray.forEach(kata => {
+                if(kataTargetArray.includes(kata)) jumlahKataCocok++;
+            });
+
+            // Hitung Rasio Kecocokan Kata
+            let rasioKecocokan = jumlahKataCocok / kataTargetArray.length;
 
             const targetEl = document.getElementById(`target-arab-${ayatTarget.nomor}`);
             const badgeNomor = document.getElementById(`badge-num-${ayatTarget.nomor}`);
 
-            if (skorKemiripan >= 0.80) { 
-                // HIJAU
+            // AMBANG BATAS VALIDASI JAUH LEBIH GAMPANG & TIDAK MEMBLOKIR
+            if (rasioKecocokan >= 0.70) { 
+                // 1. Sukses Lancar (Hijau)
                 targetEl.className = "status-correct inline";
                 warnaiBadgeBulat(badgeNomor, "#10b981");
+                sisaKataTerdeteksiCache = ""; // Reset cache karena ayat beres sempurna
                 majuKeAyatBerikutnya();
-            } else if (skorKemiripan >= 0.45 && skorKemiripan < 0.80) {
-                // ORANYE
+            } else if (rasioKecocokan >= 0.35 && rasioKecocokan < 0.70) {
+                // 2. Kurang Tepat / Tertukar dikit (Oranye)
                 targetEl.className = "status-warning inline";
                 warnaiBadgeBulat(badgeNomor, "#f97316");
+                sisaKataTerdeteksiCache = "";
                 majuKeAyatBerikutnya();
             } else {
-                // MERAH
-                targetEl.className = "status-wrong inline";
-                warnaiBadgeBulat(badgeNomor, "#ef4444");
+                /* 3. JIKA SALAH TOTAL ATAU MERAH: 
+                  Bandingkan apakah user sebetulnya sudah mulai membaca kata dari ayat berikutnya (Lompat Ayat).
+                  Ini berguna jika user sengaja melewati ayat yang susah atau lupa.
+                */
+                if(indexAyatFokusTracker + 1 < dataAyatSurahAktif.length) {
+                    let nextAyatTarget = dataAyatSurahAktif[indexAyatFokusTracker + 1];
+                    let kataNextTargetArray = nextAyatTarget.teksAsli.split(' ');
+                    let cocokDiAyatNext = 0;
+
+                    kataUserArray.forEach(kata => {
+                        if(kataNextTargetArray.includes(kata)) cocokDiAyatNext++;
+                    });
+
+                    // Jika suara user ternyata lebih cocok ke ayat berikutnya, tandai ayat sekarang MERAH dan langsung LOMPAT!
+                    if (cocokDiAyatNext >= 2 || (cocokDiAyatNext / kataNextTargetArray.length) > 0.3) {
+                        targetEl.className = "status-wrong inline";
+                        warnaiBadgeBulat(badgeNomor, "#ef4444");
+                        sisaKataTerdeteksiCache = teksBersihSuara; // Simpan suaranya untuk diuji di ayat depan
+                        majuKeAyatBerikutnya();
+                    }
+                }
             }
         }
 
@@ -394,16 +420,9 @@
             if(indexAyatFokusTracker < dataAyatSurahAktif.length) {
                 bukaKunciAyatAktif(dataAyatSurahAktif[indexAyatFokusTracker].nomor);
             } else {
-                alert("Alhamdulillah, seluruh surah selesai dibaca!");
+                alert("Alhamdulillah, seluruh surah selesai dievaluasi!");
                 if(speechEngine) speechEngine.stop();
             }
-        }
-
-        function hitungKemiripanTeks(str1, str2) {
-            let s1 = str1.split(' '); let s2 = str2.split(' ');
-            let cocok = 0;
-            s1.forEach(kata => { if(s2.includes(kata)) cocok++; });
-            return (2.0 * cocok) / (s1.length + s2.length);
         }
     </script>
 </body>
