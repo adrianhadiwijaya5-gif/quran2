@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al-Qur'an AI Hub & Smart Memorization</title>
+    <title>Dashboard Kelas & Al-Qur'an Smart Hub</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,118 +16,125 @@
 </head>
 <body class="bg-slate-900 font-sans-custom text-slate-100 min-h-screen antialiased">
 
-    <div id="loginOverlay" class="fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl max-w-sm w-full shadow-2xl text-center space-y-4">
-            <div class="bg-emerald-600/10 text-emerald-400 p-3 rounded-full w-12 h-12 mx-auto flex items-center justify-center">
-                <i class="fa-solid fa-lock text-xl"></i>
+    <nav class="bg-slate-800 border-b border-slate-700 sticky top-0 z-40 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-emerald-600 p-2 rounded-xl text-white shadow-md shadow-emerald-950">
+                    <i class="fa-solid fa-graduation-cap text-lg"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-sm tracking-wide bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">SMART CLASS & QUR'AN HUB</span>
+                    <p class="text-[9px] text-slate-500 font-mono tracking-wider">STATION: 2026215-INTEGRATED</p>
+                </div>
             </div>
-            <div>
-                <h2 class="text-base font-bold text-slate-100">Gerbang Log-In Otoritas</h2>
-                <p class="text-xs text-slate-400 mt-1">Masukkan PIN Pengurus untuk mengakses sistem</p>
+            <div class="text-xs bg-slate-900/60 px-3 py-1.5 rounded-lg border border-slate-700/50 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="networkStatus" class="text-slate-400 font-medium text-[10px]">Direct Access Mode</span>
             </div>
-            <div class="space-y-2">
-                <input type="text" id="pinInput" placeholder="Masukkan WALI99 atau 2026215" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-center font-bold font-mono text-sm tracking-widest text-slate-200 focus:outline-none focus:border-emerald-500">
-                <button onclick="cekOtorisasiLogin()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">Masuk Sistem</button>
-            </div>
-            <p id="loginErrorMsg" class="text-[11px] text-rose-400 font-medium hidden"><i class="fa-solid fa-circle-exclamation mr-1"></i> Kode akses salah / Tidak Dikenali!</p>
         </div>
-    </div>
+    </nav>
 
-    <div id="mainAppContent" class="hidden">
-        <nav class="bg-slate-800 border-b border-slate-700 sticky top-0 z-40 shadow-lg">
-            <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <div class="bg-emerald-600 p-2 rounded-xl text-white">
-                        <i class="fa-solid fa-book-quran text-lg"></i>
-                    </div>
-                    <div>
-                        <span class="font-bold text-sm tracking-wide bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">AI QUR'AN SMART HUB</span>
-                        <p class="text-[9px] text-slate-500 font-mono tracking-wider">CORE: 2026215-AQ</p>
-                    </div>
+    <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+
+        <section class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-xl space-y-3">
+            <div class="flex items-center space-x-2 text-teal-400 border-b border-slate-700 pb-2">
+                <i class="fa-solid fa-user-tie text-base"></i>
+                <h2 class="font-bold text-xs tracking-wide uppercase">Informasi Guru Mata Pelajaran</h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="bg-slate-900 p-3 rounded-xl border border-slate-700/50 flex flex-col justify-center">
+                    <span class="text-[10px] text-slate-500 font-bold uppercase font-mono tracking-wider">Matematika</span>
+                    <span class="text-xs font-semibold text-slate-200 mt-0.5">Pak Budi</span>
                 </div>
-                <div class="text-xs bg-slate-900/60 px-3 py-1.5 rounded-lg border border-slate-700/50 flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                    <span id="networkStatus" class="text-slate-400 font-medium text-[10px]">Safe Offline Engine</span>
+                <div class="bg-slate-900 p-3 rounded-xl border border-slate-700/50 flex flex-col justify-center">
+                    <span class="text-[10px] text-slate-500 font-bold uppercase font-mono tracking-wider">Bahasa Indonesia</span>
+                    <span class="text-xs font-semibold text-slate-200 mt-0.5">Bu Siti</span>
+                </div>
+                <div class="bg-slate-900 p-3 rounded-xl border border-slate-700/50 flex flex-col justify-center">
+                    <span class="text-[10px] text-slate-500 font-bold uppercase font-mono tracking-wider">Bahasa Arab</span>
+                    <span class="text-xs font-semibold text-amber-400 mt-0.5">Ustadz Ahmad</span>
+                </div>
+                <div class="bg-slate-900 p-3 rounded-xl border border-slate-700/50 flex flex-col justify-center">
+                    <span class="text-[10px] text-slate-500 font-bold uppercase font-mono tracking-wider">SBDP / Kesenian</span>
+                    <span class="text-xs font-semibold text-slate-200 mt-0.5">Bu Mega</span>
                 </div>
             </div>
-        </nav>
+        </section>
 
-        <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
-                <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl space-y-4">
-                    <div class="flex items-center space-x-2 text-emerald-400 border-b border-slate-700 pb-2">
-                        <i class="fa-solid fa-robot text-base"></i>
-                        <h2 class="font-bold text-xs tracking-wide uppercase">AI Ayat Scanner</h2>
-                    </div>
-                    <p class="text-xs text-slate-400 leading-relaxed">
-                        Ketik <code class="text-emerald-300 font-mono">NomorSurah:NomorAyat</code> (Contoh: <code class="text-amber-400">112:1</code>) untuk menyalakan deteksi otomatis AI.
-                    </p>
-                    <div class="space-y-2">
-                        <input type="text" id="inpLinkAyat" placeholder="Contoh: 112:1" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center font-bold font-mono text-xs text-slate-100 focus:outline-none focus:border-emerald-500">
-                        <button onclick="prosesDeteksiAI()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs transition flex justify-center items-center gap-2 cursor-pointer">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> Analisis & Lompat Ayat
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl space-y-4">
+                <div class="flex items-center space-x-2 text-emerald-400 border-b border-slate-700 pb-2">
+                    <i class="fa-solid fa-robot text-base"></i>
+                    <h2 class="font-bold text-xs tracking-wide uppercase">AI Ayat Scanner</h2>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Ketik koordinat angka dengan format <code class="text-emerald-300 font-mono">NomorSurah:NomorAyat</code> (Contoh: <code class="text-amber-400">112:1</code> untuk Al-Ikhlas ayat 1) lalu klik Analisis.
+                </p>
+                <div class="space-y-2">
+                    <input type="text" id="inpLinkAyat" placeholder="Contoh: 112:1" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center font-bold font-mono text-xs text-slate-100 focus:outline-none focus:border-emerald-500">
+                    <button onclick="prosesDeteksiAI()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs transition flex justify-center items-center gap-2 cursor-pointer shadow-md shadow-emerald-950">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Analisis & Lompat Ayat
+                    </button>
+                </div>
+
+                <div id="aiResultBox" class="hidden bg-slate-900/80 border border-slate-700/60 p-3 rounded-xl space-y-1">
+                    <p id="aiSurahResult" class="font-bold text-[11px] text-emerald-400 uppercase font-mono">-</p>
+                    <p id="aiAyahTextResult" class="font-arabic text-right text-base text-amber-300 leading-loose" dir="rtl"></p>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl space-y-4 md:col-span-2 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                        <div class="flex items-center space-x-2 text-amber-400">
+                            <i class="fa-solid fa-book-open-reader text-base"></i>
+                            <h2 class="font-bold text-xs tracking-wide uppercase">Interactive Tahfidz Lab</h2>
+                        </div>
+                        <button onclick="toggleModeSamar()" id="btnSamar" class="bg-slate-700 text-slate-200 px-2 py-0.5 rounded-lg text-[11px] font-bold cursor-pointer transition hover:bg-slate-600">
+                            <i class="fa-solid fa-eye-slash"></i> Ayat Menghilang: <span id="statusSamar" class="text-amber-400">OFF</span>
                         </button>
                     </div>
 
-                    <div id="aiResultBox" class="hidden bg-slate-900/80 border border-slate-700/60 p-3 rounded-xl space-y-1">
-                        <p id="aiSurahResult" class="font-bold text-[11px] text-emerald-400 uppercase font-mono">-</p>
-                        <p id="aiAyahTextResult" class="font-arabic text-right text-base text-amber-300 leading-loose" dir="rtl"></p>
+                    <div class="my-4 bg-slate-900 p-6 rounded-2xl border border-slate-700/50 text-center space-y-3 min-h-[140px] flex flex-col justify-center relative">
+                        <div class="absolute top-2 left-3 text-[9px] font-mono text-slate-500" id="infoNomorAyat">Memuat data Engine...</div>
+                        <div id="displayAyatArab" class="font-arabic text-2xl md:text-3xl text-slate-100 tracking-wide leading-loose select-none transition-all duration-300 pt-1 text-center" dir="rtl">-</div>
+                        <div id="displayTerjemahan" class="text-xs text-slate-400 max-w-xl mx-auto">-</div>
+                    </div>
+
+                    <div class="bg-slate-900/50 border border-slate-700/60 p-3 rounded-xl space-y-2">
+                        <div class="flex justify-between items-center text-[10px]">
+                            <span class="font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-microphone-lines text-rose-400 mr-1"></i> Real-time Audio Checker</span>
+                            <span id="aiFeedbackStatus" class="bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded text-slate-500 font-mono">Standby</span>
+                        </div>
+                        <p id="txtHasilSuara" class="italic text-slate-500 font-arabic text-right w-full text-sm" dir="rtl">Tekan tombol mic untuk menguji hafalan lafadz...</p>
+                        <div id="boxStatusKoreksi" class="hidden p-2 rounded-lg text-xs font-bold text-center border"></div>
                     </div>
                 </div>
 
-                <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl space-y-4 md:col-span-2 flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-center border-b border-slate-700 pb-2">
-                            <div class="flex items-center space-x-2 text-amber-400">
-                                <i class="fa-solid fa-graduation-cap text-base"></i>
-                                <h2 class="font-bold text-xs tracking-wide uppercase">Tahfidz Lab</h2>
-                            </div>
-                            <button onclick="toggleModeSamar()" id="btnSamar" class="bg-slate-700 text-slate-200 px-2 py-1 rounded-lg text-[11px] font-bold cursor-pointer">
-                                <i class="fa-solid fa-eye-slash"></i> Ayat Menghilang: <span id="statusSamar" class="text-amber-400">OFF</span>
-                            </button>
-                        </div>
-
-                        <div class="my-4 bg-slate-900 p-6 rounded-2xl border border-slate-700/50 text-center space-y-3 min-h-[140px] flex flex-col justify-center relative">
-                            <div class="absolute top-2 left-3 text-[9px] font-mono text-slate-500" id="infoNomorAyat">Memuat...</div>
-                            <div id="displayAyatArab" class="font-arabic text-2xl md:text-3xl text-slate-100 tracking-wide leading-loose select-none transition-all duration-300 pt-1 text-center" dir="rtl">-</div>
-                            <div id="displayTerjemahan" class="text-xs text-slate-400 max-w-xl mx-auto">-</div>
-                        </div>
-
-                        <div class="bg-slate-900/50 border border-slate-700/60 p-3 rounded-xl space-y-2">
-                            <div class="flex justify-between items-center text-[10px]">
-                                <span class="font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-microphone-lines text-rose-400 mr-1"></i> Pengoreksi Audio</span>
-                                <span id="aiFeedbackStatus" class="bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded text-slate-500 font-mono">Standby</span>
-                            </div>
-                            <p id="txtHasilSuara" class="italic text-slate-500 font-arabic text-right w-full text-sm" dir="rtl">Tekan tombol mic untuk mulai koreksi bacaan...</p>
-                            <div id="boxStatusKoreksi" class="hidden p-2 rounded-lg text-xs font-bold text-center border"></div>
-                        </div>
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-3 border-t border-slate-700/60 mt-2">
+                    <div class="flex space-x-2 w-full sm:w-auto">
+                        <button onclick="pindahAyat(-1)" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer transition">◀ Sebelum</button>
+                        <button onclick="pindahAyat(1)" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer transition">Berikutnya ▶</button>
                     </div>
-
-                    <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-3 border-t border-slate-700/60 mt-2">
-                        <div class="flex space-x-2 w-full sm:w-auto">
-                            <button onclick="pindahAyat(-1)" class="bg-slate-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">◀ Sebelum</button>
-                            <button onclick="pindahAyat(1)" class="bg-slate-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Berikutnya ▶</button>
-                        </div>
-                        <button id="btnMic" onclick="toggleDengarSuara()" class="w-full sm:w-auto bg-rose-600 hover:bg-rose-500 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer">
-                            <i id="iconMic" class="fa-solid fa-microphone"></i> <span id="textMic">Uji Suara (Mic)</span>
-                        </button>
-                    </div>
+                    <button id="btnMic" onclick="toggleDengarSuara()" class="w-full sm:w-auto bg-rose-600 hover:bg-rose-500 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer transition shadow-md shadow-rose-950">
+                        <i id="iconMic" class="fa-solid fa-microphone"></i> <span id="textMic">Uji Suara (Mic)</span>
+                    </button>
                 </div>
             </div>
+        </section>
 
-            <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-xl">
-                <div class="p-3 bg-slate-700/40 border-b border-slate-700 flex justify-between items-center">
-                    <h3 class="font-bold text-xs text-slate-100 uppercase tracking-wide">Mushaf Digital (114 Surah)</h3>
-                    <span id="dbModeLabel" class="text-[9px] bg-amber-950 text-amber-400 px-1.5 py-0.5 rounded border border-amber-800 font-mono font-bold">MODE: SAFE AUTOSWITCH</span>
-                </div>
-                <div class="p-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2 max-h-48 overflow-y-auto" id="gridSurahContainer"></div>
+        <section class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-xl">
+            <div class="p-3 bg-slate-700/40 border-b border-slate-700 flex justify-between items-center">
+                <h3 class="font-bold text-xs text-slate-100 uppercase tracking-wide"><i class="fa-solid fa-layer-group text-emerald-400 mr-1"></i> Index Al-Qur'an (114 Surah Penuh)</h3>
+                <span id="dbModeLabel" class="text-[9px] bg-emerald-950 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-800 font-mono font-bold">MODE: SMART CLOUD AUTOMATIC</span>
             </div>
-        </main>
-    </div>
+            <div class="p-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2 max-h-48 overflow-y-auto" id="gridSurahContainer"></div>
+        </section>
+    </main>
 
     <script>
-        // DATABASE LOKAL JIKA REQUES KE API KEMENAG TERBLOKIR CORS / INTERNET DOWN
+        // DATABASE INTERNAL CADANGAN (Anti Eror / Anti Lemot kalau API utama sedang gangguan)
         const quranLocalFallback = {
             1: { nama: "Al-Fatihah", ayat: [
                 { no: 1, arab: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", indo: "Dengan nama Allah Yang Maha Pengasih, Maha Penyayang." },
@@ -139,7 +146,7 @@
                 { no: 2, arab: "اللَّهُ الصَّمَدُ", indo: "Allah tempat meminta segala sesuatu." }
             ]},
             114: { nama: "An-Nas", ayat: [
-                { no: 1, arab: "قُلْ أَعُوذُ بِرَبِّ النَّاسِ", indo: "Katakanlah, Aku berlindung kepada Tuhannya manusia." }
+                { no: 1, arab: "قُل| أَعُوذُ بِرَبِّ النَّاسِ", indo: "Katakanlah, Aku berlindung kepada Tuhannya manusia." }
             ]}
         };
 
@@ -153,40 +160,22 @@
         let audioRecognition;
         let sedangMendengar = false;
 
-        // LOGIKA GERBANG OTORISASI AMAN (Memperbaiki Eror Gambar 2)
-        function cekOtorisasiLogin() {
-            const input = document.getElementById('pinInput').value.trim().toUpperCase();
-            const errorLabel = document.getElementById('loginErrorMsg');
-            
-            // Menerima kunci WALI99 (Sesuai ketikanmu di screenshot) atau kode project 2026215
-            if (input === "WALI99" || input === "2026215") {
-                errorLabel.classList.add('hidden');
-                document.getElementById('loginOverlay').classList.add('hidden');
-                document.getElementById('mainAppContent').classList.remove('hidden');
-                // Jalankan aplikasi
-                buildSurahGrid();
-                pilihSurah(1);
-            } else {
-                errorLabel.classList.remove('hidden');
-            }
-        }
-
         async function loadSurahData(noSurah) {
             try {
                 const res = await fetch(`https://equran.id/api/v2/surat/${noSurah}`);
                 if (!res.ok) throw new Error();
-                const result = await res.json();
+                const result = await res.ok ? await res.json() : null;
                 if (result && result.code === 200) {
                     koleksiAyatSurahIni = result.data.ayat.map(a => ({ no: a.nomorAyat, arab: a.teksArab, indo: a.teksIndonesia }));
-                    document.getElementById('dbModeLabel').innerText = "MODE: LIVE API CLOUD";
+                    document.getElementById('dbModeLabel').innerText = "MODE: LIVE CLOUD API (ONLINE)";
                     return true;
                 }
             } catch (e) {
-                console.log("Menggunakan database lokal anti-gagal.");
+                console.log("Mengaktifkan skema data lokal.");
             }
             const fb = quranLocalFallback[noSurah] || quranLocalFallback[1];
             koleksiAyatSurahIni = fb.ayat;
-            document.getElementById('dbModeLabel').innerText = "MODE: LOCAL STORAGE AUTOMATIC";
+            document.getElementById('dbModeLabel').innerText = "MODE: LOCAL FALLBACK ENGINE";
         }
 
         function buildSurahGrid() {
@@ -195,7 +184,7 @@
             masterSurahList.forEach(s => {
                 const card = document.createElement('div');
                 card.id = `card-s-${s.no}`;
-                card.className = `p-1.5 rounded-xl border text-left flex flex-col justify-center text-xs cursor-pointer transition ${nomorSurahAktif == s.no ? 'bg-emerald-950 border-emerald-500 text-emerald-400 font-bold' : 'bg-slate-900 border-slate-700/60 text-slate-300 hover:bg-slate-800'}`;
+                card.className = `p-1.5 rounded-xl border text-left flex flex-col justify-center text-xs cursor-pointer transition ${nomorSurahAktif == s.no ? 'bg-emerald-950 border-emerald-500 text-emerald-400 font-bold shadow' : 'bg-slate-900 border-slate-700/60 text-slate-300 hover:bg-slate-800'}`;
                 card.setAttribute('onclick', `pilihSurah(${s.no})`);
                 card.innerHTML = `<span class="text-[8px] text-slate-500 font-mono">No. ${s.no}</span><span class="truncate">${s.nama}</span>`;
                 container.appendChild(card);
@@ -280,7 +269,7 @@
 
         function toggleDengarSuara() {
             if (!('webkitSpeechRecognition' in window) && !('speechRecognition' in window)) {
-                alert("Browser memblokir Audio API. Gunakan Chrome/Edge.");
+                alert("Browser memblokir API Mic. Silakan gunakan browser Chrome / Edge.");
                 return;
             }
             if (!audioRecognition) {
@@ -294,12 +283,18 @@
                     const box = document.getElementById('boxStatusKoreksi');
                     box.classList.remove('hidden');
                     box.className = "p-2 rounded-lg text-xs font-bold text-center border bg-emerald-950 border-emerald-500 text-emerald-400";
-                    box.innerText = "AI mendeteksi suara masuk dengan sukses!";
+                    box.innerText = "Suara Arab ditangkap dan dianalisis sukses!";
                 };
             }
             if (sedangMendengar) audioRecognition.stop();
             else audioRecognition.start();
         }
+
+        // Jalankan langsung tanpa nunggu tombol log-in
+        window.onload = async () => {
+            buildSurahGrid();
+            await pilihSurah(1);
+        };
     </script>
 </body>
 </html>
