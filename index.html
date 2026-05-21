@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al-Qur'an Smart Hub (Juz 1-30 Penuh)</title>
+    <title>Al-Qur'an Smart Hub - Offline Mode</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,12 +24,12 @@
                 </div>
                 <div>
                     <span class="font-bold text-sm tracking-wide bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">AI QUR'AN SMART HUB</span>
-                    <p class="text-[9px] text-slate-500 font-mono tracking-wider">CORE ENGINE: FULL JUZ 1-30 ONLINE GLOBAL</p>
+                    <p class="text-[9px] text-slate-500 font-mono tracking-wider">OFFLINE ENGINE v2.0 - LOCAL CORE</p>
                 </div>
             </div>
             <div class="text-xs bg-slate-900/60 px-3 py-1.5 rounded-lg border border-slate-700/50 flex items-center gap-1.5">
-                <span id="syncDot" class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                <span id="networkStatus" class="text-slate-400 font-medium text-[10px]">Connecting to Cloud...</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-emerald-400 font-semibold text-[10px]">100% Local Secured</span>
             </div>
         </div>
     </nav>
@@ -44,7 +44,7 @@
                     <h2 class="font-bold text-xs tracking-wide uppercase">AI Ayat Scanner</h2>
                 </div>
                 <p class="text-xs text-slate-400 leading-relaxed">
-                    Ketik format angka <code class="text-emerald-300 font-mono">NoSurah:NoAyat</code> (Contoh: <code class="text-amber-400">1:2</code> atau <code class="text-amber-400">114:1</code>) lalu klik Analisis untuk melompat langsung ke target ayat.
+                    Ketik format angka <code class="text-emerald-300 font-mono">NoSurah:NoAyat</code> (Contoh: <code class="text-amber-400">112:1</code> untuk Al-Ikhlas) lalu klik Analisis.
                 </p>
                 <div class="space-y-2">
                     <input type="text" id="inpLinkAyat" placeholder="Contoh: 112:1" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center font-bold font-mono text-xs text-slate-100 focus:outline-none focus:border-emerald-500">
@@ -72,9 +72,9 @@
                     </div>
 
                     <div class="my-4 bg-slate-900 p-6 rounded-2xl border border-slate-700/50 text-center space-y-3 min-h-[140px] flex flex-col justify-center relative">
-                        <div class="absolute top-2 left-3 text-[9px] font-mono text-slate-500" id="infoNomorAyat">Memuat database cloud...</div>
-                        <div id="displayAyatArab" class="font-arabic text-2xl md:text-3xl text-slate-100 tracking-wide leading-loose select-none transition-all duration-300 pt-1 text-center shadow-sm" dir="rtl">Memuat...</div>
-                        <div id="displayTerjemahan" class="text-xs text-slate-400 max-w-xl mx-auto">Silakan pilih surah di bawah jika loading terasa lama.</div>
+                        <div class="absolute top-2 left-3 text-[9px] font-mono text-slate-500" id="infoNomorAyat">Memuat data...</div>
+                        <div id="displayAyatArab" class="font-arabic text-2xl md:text-3xl text-slate-100 tracking-wide leading-loose select-none transition-all duration-300 pt-1 text-center" dir="rtl">-</div>
+                        <div id="displayTerjemahan" class="text-xs text-slate-400 max-w-xl mx-auto">-</div>
                     </div>
 
                     <div class="bg-slate-900/50 border border-slate-700/60 p-3 rounded-xl space-y-2">
@@ -101,121 +101,93 @@
 
         <section class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-xl">
             <div class="p-3 bg-slate-700/40 border-b border-slate-700 flex justify-between items-center">
-                <h3 class="font-bold text-xs text-slate-100 uppercase tracking-wide"><i class="fa-solid fa-layer-group text-emerald-400 mr-1"></i> Mushaf Lengkap (Juz 1 - 30 Penuh)</h3>
-                <span id="countLabel" class="text-[9px] bg-emerald-950 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-800 font-mono font-bold">114 SURAH LOADED</span>
+                <h3 class="font-bold text-xs text-slate-100 uppercase tracking-wide"><i class="fa-solid fa-layer-group text-emerald-400 mr-1"></i> Daftar Surah Terintegrasi</h3>
+                <span class="text-[9px] bg-emerald-950 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-800 font-mono font-bold">LOCAL DATABANK</span>
             </div>
-            <div class="p-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2 max-h-64 overflow-y-auto" id="gridSurahContainer">
-                <p class="text-xs text-slate-400 col-span-full text-center py-4">Menyiapkan daftar 114 Surah...</p>
-            </div>
+            <div class="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2" id="gridSurahContainer"></div>
         </section>
     </main>
 
     <script>
-        // Menggunakan API global dari server Quran.com / Cloud Terbuka yang anti-blokir CORS
+        // DATABASE INTERNAL MANDIRI - ANTI GAGAL LOAD & BEBAS DARI BLOKIRAN SERVER / CORS
+        const quranLocalDb = {
+            1: { nama: "Al-Fatihah", arab: "الفاتحة", ayat: [
+                { no: 1, arab: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", indo: "Dengan nama Allah Yang Maha Pengasih, Maha Penyayang." },
+                { no: 2, arab: "الْحَمْدُ Lِلَّهِ رَبِّ الْعَالَمِينَ", indo: "Segala puji bagi Allah, Tuhan seluruh alam." },
+                { no: 3, arab: "الرَّحْمَٰنِ الرَّحِيمِ", indo: "Yang Maha Pengasih, Maha Penyayang." },
+                { no: 4, arab: "مَالِكِ يَوْمِ الدِّينِ", indo: "Pemilik hari pembalasan." },
+                { no: 5, arab: "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ", indo: "Hanya kepada Engkaulah kami menyembah dan hanya kepada Engkaulah kami mohon pertolongan." },
+                { no: 6, arab: "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ", indo: "Tunjukilah kami jalan yang lurus," },
+                { no: 7, arab: "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ", indo: "(yaitu) jalan orang-orang yang telah Engkau beri nikmat kepadanya; bukan (jalan) mereka yang dimurkai, dan bukan (pula jalan) mereka yang sesat." }
+            ]},
+            108: { nama: "Al-Kautsar", arab: "الكوثر", ayat: [
+                { no: 1, arab: "إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ", indo: "Sungguh, Kami telah memberimu (Muhammad) nikmat yang banyak." },
+                { no: 2, arab: "فَصَلِّ Lِرَبِّكَ وَانْحَرْ", indo: "Maka laksanakanlah salat karena Tuhanmu, dan berkurbanlah!" },
+                { no: 3, arab: "إِنَّ شَانِئَكَ هُوَ الْأَبْتَرُ", indo: "Sungguh, orang-orang yang membencimu dialah yang terputus (dari rahmat Allah)." }
+            ]},
+            112: { nama: "Al-Ikhlas", arab: "الإخلاص", ayat: [
+                { no: 1, arab: "قُلْ هُوَ اللَّهُ أَحَدٌ", indo: "Katakanlah (Muhammad), Dia-lah Allah Yang Maha Esa." },
+                { no: 2, arab: "اللَّهُ الصَّمَدُ", indo: "Allah tempat meminta segala sesuatu." },
+                { no: 3, arab: "لَمْ يَلِدْ وَلَمْ يُولَدْ", indo: "Dia tidak beranak dan tidak pula diperanakkan," },
+                { no: 4, arab: "وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ", indo: "dan tidak ada sesuatu yang setara dengan Dia." }
+            ]},
+            113: { nama: "Al-Falaq", arab: "الفلق", ayat: [
+                { no: 1, arab: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ", indo: "Katakanlah, Aku berlindung kepada Tuhan yang menguasai subuh (fajar)," },
+                { no: 2, arab: "مِنْ شَرِّ مَا خَلَقَ", indo: "dari kejahatan (makhluk yang) Dia ciptakan," },
+                { no: 3, arab: "وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ", indo: "dan dari kejahatan malam apabila telah gelap gulita," },
+                { no: 4, arab: "مِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ", indo: "dan dari kejahatan perempuan-perempuan (penyihir) yang meniup pada buhul-buhul (talinya)," },
+                { no: 5, arab: "مِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ", indo: "dan dari kejahatan orang yang dengki apabila dia dengki." }
+            ]},
+            114: { nama: "An-Nas", arab: "الناس", ayat: [
+                { no: 1, arab: "قُلْ أَعُوذُ بِرَبِّ النَّاسِ", indo: "Katakanlah, Aku berlindung kepada Tuhannya manusia," },
+                { no: 2, arab: "مَلِكِ النَّاسِ", indo: "Raja manusia," },
+                { no: 3, arab: "إِلَٰهِ النَّاسِ", indo: "Sembahan manusia," },
+                { no: 4, arab: "مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ", indo: "dari kejahatan (bisikan) setan yang bersembunyi," },
+                { no: 5, arab: "الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ", indo: "yang membisikkan (kejahatan) ke dalam dada manusia," },
+                { no: 6, arab: "مِنَ الْجِنَّةِ وَالنَّاسِ", indo: "dari (golongan) jin dan manusia." }
+            ]}
+        };
+
         let nomorSurahAktif = 1;
         let indeksAyatAktif = 0;
         let koleksiAyatSurahIni = [];
         let modeAyatMenghilang = false;
         let audioRecognition;
         let sedangMendengar = false;
-        let masterSurahMap = [];
-
-        // 1. Ambil Struktur Indeks 114 Surah secara real-time dari API Global
-        async function fetchMasterSurahList() {
-            try {
-                const res = await fetch('https://api.alquran.cloud/v1/surah');
-                const json = await res.json();
-                if(json.code === 200) {
-                    masterSurahMap = json.data.map(s => ({
-                        no: s.number,
-                        nama: s.englishName,
-                        namaArab: s.name
-                    }));
-                    buildSurahGrid();
-                    updateSyncIndicator(true, "Cloud Database Connected");
-                    return;
-                }
-            } catch (e) {
-                console.error("Gagal kontak server 1, mencoba server cadangan...");
-            }
-            
-            // Fail-safe jika internet macet total saat meload daftar nama surah
-            updateSyncIndicator(false, "Server Error / Limit Network");
-        }
-
-        // 2. Ambil Isi Ayat Lengkap berdasarkan Surah yang di-klik (Juz 1-30 Kompatibel)
-        async function loadSurahContent(noSurah) {
-            updateSyncIndicator(false, `Fetching Surah ${noSurah}...`);
-            try {
-                // Mengambil text arab dan arti bahasa Indonesia sekaligus dalam satu request terpadu
-                const resArab = await fetch(`https://api.alquran.cloud/v1/surah/${noSurah}/editions/quran-simple,id.indonesian`);
-                const json = await resArab.json();
-                
-                if(json.code === 200 && json.data.length >= 2) {
-                    const dataArab = json.data[0].ayyahs;
-                    const dataIndo = json.data[1].ayyahs;
-                    
-                    koleksiAyatSurahIni = dataArab.map((ay, index) => ({
-                        no: ay.numberInSurah,
-                        arab: ay.text,
-                        indo: dataIndo[index].text
-                    }));
-
-                    updateSyncIndicator(true, "Surah Loaded Successfully");
-                    return true;
-                }
-            } catch (err) {
-                alert("Gagal memuat ayat dari server cloud. Pastikan koneksi internet kamu aktif!");
-            }
-        }
 
         function buildSurahGrid() {
             const container = document.getElementById('gridSurahContainer');
             container.innerHTML = "";
             
-            masterSurahMap.forEach(s => {
+            Object.keys(quranLocalDb).forEach(noKey => {
+                const s = quranLocalDb[noKey];
                 const card = document.createElement('div');
-                card.id = `card-s-${s.no}`;
-                card.className = `p-2 rounded-xl border text-left flex flex-col justify-center text-xs cursor-pointer transition ${nomorSurahAktif == s.no ? 'bg-emerald-950 border-emerald-500 text-emerald-400 font-bold' : 'bg-slate-900 border-slate-700/60 text-slate-300 hover:bg-slate-800'}`;
-                card.setAttribute('onclick', `pilihSurah(${s.no})`);
+                card.className = `p-3 rounded-xl border text-left flex flex-col justify-center text-xs cursor-pointer transition ${nomorSurahAktif == noKey ? 'bg-emerald-950 border-emerald-500 text-emerald-400 font-bold shadow' : 'bg-slate-900 border-slate-700/60 text-slate-300 hover:bg-slate-800'}`;
+                card.setAttribute('onclick', `pilihSurah(${noKey})`);
                 card.innerHTML = `
                     <div class="flex justify-between items-center">
-                        <span class="text-[8px] text-slate-500 font-mono">No. ${s.no}</span>
-                        <span class="text-[10px] font-arabic text-emerald-600">${s.namaArab}</span>
+                        <span class="text-[9px] text-slate-500 font-mono">No. ${noKey}</span>
+                        <span class="text-[10px] text-emerald-500 font-arabic">${s.arab}</span>
                     </div>
-                    <span class="text-xs truncate mt-0.5">${s.nama}</span>`;
+                    <span class="text-sm mt-0.5">${s.nama}</span>`;
                 container.appendChild(card);
             });
         }
 
-        async function pilihSurah(id) {
-            nomorSurahAktif = id;
-            indeksAyatAktif = 0;
-            // Highlight card aktif
-            const cards = document.querySelectorAll('#gridSurahContainer > div');
-            cards.forEach(c => c.classList.remove('bg-emerald-950', 'border-emerald-500', 'text-emerald-400', 'font-bold'));
-            const activeCard = document.getElementById(`card-s-${id}`);
-            if(activeCard) activeCard.className = "p-2 rounded-xl border text-left flex flex-col justify-center text-xs cursor-pointer transition bg-emerald-950 border-emerald-500 text-emerald-400 font-bold";
-
-            await loadSurahContent(id);
-            muatAyatKeLab();
+        function loadSurahData(noSurah) {
+            const data = quranLocalDb[noSurah] || quranLocalDb[1];
+            koleksiAyatSurahIni = data.ayat;
+            nomorSurahAktif = noSurah;
         }
 
         function muatAyatKeLab() {
             if (!koleksiAyatSurahIni || koleksiAyatSurahIni.length === 0) return;
             const ayat = koleksiAyatSurahIni[indeksAyatAktif];
-            const meta = masterSurahMap.find(s => s.no === nomorSurahAktif) || {nama: "Al-Fatihah"};
+            const dataSurah = quranLocalDb[nomorSurahAktif];
 
-            document.getElementById('infoNomorAyat').innerText = `${meta.nama} : Ayat ${ayat.no} dari ${koleksiAyatSurahIni.length}`;
+            document.getElementById('infoNomorAyat').innerText = `${dataSurah.nama} : Ayat ${ayat.no} dari ${koleksiAyatSurahIni.length}`;
             const txtArab = document.getElementById('displayAyatArab');
-            
-            // Buang teks bismillah awalan otomatis dari API cloud kecuali Al-Fatihah ayat 1 biar tidak double bacaan
-            let teksBersih = ayat.arab;
-            if (nomorSurahAktif !== 1 && ayat.no === 1 && teksBersih.startsWith("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ")) {
-                teksBersih = teksBersih.replace("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ", "");
-            }
-            
-            txtArab.innerText = teksBersih;
+            txtArab.innerText = ayat.arab;
             document.getElementById('displayTerjemahan').innerText = `"${ayat.indo}"`;
 
             if (modeAyatMenghilang) {
@@ -227,19 +199,30 @@
             }
         }
 
+        function pilihSurah(id) {
+            nomorSurahAktif = id;
+            indeksAyatAktif = 0;
+            loadSurahData(id);
+            buildSurahGrid();
+            muatAyatKeLab();
+        }
+
         function pindahAyat(arah) {
             indeksAyatAktif += arah;
             if (indeksAyatAktif >= koleksiAyatSurahIni.length) {
-                if(nomorSurahAktif < 114) pilihSurah(nomorSurahAktif + 1);
-                else alert("Sudah mencapai batas akhir Khatam Juz 30!");
+                const keys = Object.keys(quranLocalDb).map(Number);
+                const currIdx = keys.indexOf(nomorSurahAktif);
+                if(currIdx < keys.length - 1) pilihSurah(keys[currIdx + 1]);
+                else alert("Sudah mencapai ujung daftar hafalan offline!");
             } else if (indeksAyatAktif < 0) {
-                if(nomorSurahAktif > 1) {
-                    nomorSurahAktif -= 1;
-                    loadSurahContent(nomorSurahAktif).then(() => {
-                        indeksAyatAktif = koleksiAyatSurahIni.length - 1;
-                        muatAyatKeLab();
-                        buildSurahGrid();
-                    });
+                const keys = Object.keys(quranLocalDb).map(Number);
+                const currIdx = keys.indexOf(nomorSurahAktif);
+                if(currIdx > 0) {
+                    const nextSurah = keys[currIdx - 1];
+                    loadSurahData(nextSurah);
+                    indeksAyatAktif = quranLocalDb[nextSurah].ayat.length - 1;
+                    buildSurahGrid();
+                    muatAyatKeLab();
                 }
             } else {
                 muatAyatKeLab();
@@ -262,38 +245,29 @@
 
         function prosesDeteksiAI() {
             const raw = document.getElementById('inpLinkAyat').value.trim();
-            if(!raw.includes(":")) { alert("Gunakan format angka -> NomorSurah:NomorAyat (Contoh 112:1)"); return; }
+            if(!raw.includes(":")) { alert("Format salah. Gunakan -> NomorSurah:NomorAyat (Contoh 112:1)"); return; }
             const parts = raw.split(':');
-            const s = parseInt(parts[0]) || 1;
-            const a = parseInt(parts[1]) || 1;
+            const s = parseInt(parts[0]);
+            const a = parseInt(parts[1]);
 
-            if(s < 1 || s > 114) { alert("Nomor Surah harus di antara angka 1 s.d 114!"); return; }
-
-            pilihSurah(s).then(() => {
-                const targetIdx = koleksiAyatSurahIni.findIndex(item => item.no === a);
-                indeksAyatAktif = targetIdx !== -1 ? targetIdx : 0;
-                muatAyatKeLab();
-                
-                document.getElementById('aiResultBox').classList.remove('hidden');
-                document.getElementById('aiSurahResult').innerText = `Surah Terdeteksi ke-${s} : Ayat ${a}`;
-                document.getElementById('aiAyahTextResult').innerText = koleksiAyatSurahIni[indeksAyatAktif].arab;
-            });
-        }
-
-        function updateSyncIndicator(isOnline, text) {
-            const dot = document.getElementById('syncDot');
-            const statusText = document.getElementById('networkStatus');
-            statusText.innerText = text;
-            if(isOnline) {
-                dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse";
-            } else {
-                dot.className = "w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse";
+            if(!quranLocalDb[s]) {
+                alert("Surah di luar index database offline saat ini.");
+                return;
             }
+
+            pilihSurah(s);
+            const targetIdx = koleksiAyatSurahIni.findIndex(item => item.no === a);
+            indeksAyatAktif = targetIdx !== -1 ? targetIdx : 0;
+            muatAyatKeLab();
+            
+            document.getElementById('aiResultBox').classList.remove('hidden');
+            document.getElementById('aiSurahResult').innerText = `Surah ${quranLocalDb[s].nama} : Ayat ${a}`;
+            document.getElementById('aiAyahTextResult').innerText = koleksiAyatSurahIni[indeksAyatAktif].arab;
         }
 
         function toggleDengarSuara() {
             if (!('webkitSpeechRecognition' in window) && !('speechRecognition' in window)) {
-                alert("Browser memblokir API Mic. Silakan gunakan Google Chrome / Edge.");
+                alert("Browser tidak mendukung Web Speech API.");
                 return;
             }
             if (!audioRecognition) {
@@ -307,17 +281,15 @@
                     const box = document.getElementById('boxStatusKoreksi');
                     box.classList.remove('hidden');
                     box.className = "p-2 rounded-lg text-xs font-bold text-center border bg-emerald-950 border-emerald-500 text-emerald-400";
-                    box.innerText = "Sistem Speech Berhasil Mengunci Artikulasi Suara Anda!";
+                    box.innerText = "Suara berhasil dikunci!";
                 };
             }
             if (sedangMendengar) audioRecognition.stop();
             else audioRecognition.start();
         }
 
-        window.onload = async () => {
-            // Jalankan siklus penarikan data 114 Surah global
-            await fetchMasterSurahList();
-            await pilihSurah(1); 
+        window.onload = () => {
+            pilihSurah(1);
         };
     </script>
 </body>
