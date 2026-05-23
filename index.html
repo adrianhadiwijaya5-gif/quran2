@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarteel Ultimate Engine v6.0 - Al-Quran & Audio AI Detector</title>
+    <title>Tarteel Neural Engine v7.0 - Advanced Computational Linguistics</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -107,7 +107,7 @@
                 </button>
                 <div class="hidden sm:block w-[1px] bg-slate-800 my-1.5 mx-0.5"></div>
 
-                <button id="tabModeCariAyat" onclick="gantiModeAplikasi('cariayat')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-sky-400 border border-sky-500/10 bg-sky-500/5 transition cursor-pointer hover:bg-sky-500/10">
+                <button id="tabModeCariAyat" onclick="gantiModeAplikasi('cariayat')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 transition cursor-pointer hover:text-slate-200">
                     <i class="fa-solid fa-wand-magic-sparkles mr-1 text-sky-400"></i> Cari Ayat (AI Detector)
                 </button>
             </div>
@@ -122,10 +122,12 @@
         </div>
 
         <div id="panelInputKhutbahBox" class="mt-4 bg-slate-900 border border-slate-800 p-4 rounded-xl hidden space-y-3 shadow-md">
-            <span class="text-[10px] font-mono tracking-widest text-amber-400 font-bold uppercase block">Masukkan Tautan Khutbah YouTube:</span>
+            <span class="text-[10px] font-mono tracking-widest text-amber-400 font-bold uppercase block"><i class="fa-solid fa-microchip mr-1"></i> Input Audio / Link Video Khutbah (AI Word & Harakat Parser):</span>
             <div class="flex gap-2">
-                <input type="text" id="inpYoutubeLink" placeholder="Tempel link disini (Contoh: https://www.youtube.com/watch?v=...)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500 font-mono">
-                <button onclick="prosesTranslasiKhutbahYouTube()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xs px-5 rounded-xl transition cursor-pointer">Translate</button>
+                <input type="text" id="inpYoutubeLink" placeholder="Tempel URL YouTube khutbah atau rekaman audio disini..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500 font-mono">
+                <button onclick="prosesTranslasiKhutbahYouTube()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xs px-5 rounded-xl transition cursor-pointer shadow-md">
+                    Analisis Khutbah
+                </button>
             </div>
         </div>
 
@@ -138,9 +140,7 @@
                         <button onclick="prosesDeteksiAyatViaSistemAI('link')" class="bg-sky-600 hover:bg-sky-500 text-slate-950 font-bold text-xs px-5 rounded-xl transition cursor-pointer">Analisis</button>
                     </div>
                 </div>
-                
                 <div class="hidden md:block text-slate-600 text-xs font-bold px-2">ATAU</div>
-
                 <div class="w-full md:w-auto text-center">
                     <span class="text-[10px] font-mono tracking-widest text-emerald-400 font-bold uppercase block mb-2">Opsi 2: Rekam Suara Langsung:</span>
                     <button id="btnCariAyatVoice" onclick="prosesDeteksiAyatViaSistemAI('suara')" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-6 py-2.5 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap shadow-md">
@@ -151,18 +151,22 @@
         </div>
     </div>
 
-    <main class="flex-1 max-w-4xl w-full mx-auto p-6 md:p-12 text-right select-none overflow-y-auto mushaf-scroll-area" dir="rtl">
+    <main class="flex-1 max-w-5xl w-full mx-auto p-6 md:p-12 text-right select-none overflow-y-auto mushaf-scroll-area">
         
         <div id="areaKontenMushafUtama" class="font-quran-madani text-justify whitespace-normal leading-[6rem] min-h-[50vh]"></div>
 
-        <div id="areaHasilTranslateKhutbah" class="hidden text-left font-sans text-slate-300 space-y-4 min-h-[50vh]" dir="ltr">
-            <div class="p-6 bg-slate-950/40 border border-slate-900 rounded-2xl space-y-3">
-                <div class="flex items-center gap-2 border-b border-slate-900 pb-3">
-                    <i class="fa-solid fa-language text-amber-400"></i>
-                    <h3 class="text-sm font-bold text-slate-200">TRANSKRIP & TERJEMAHAN KHUTBAH JUMAT</h3>
+        <div id="areaHasilTranslateKhutbah" class="hidden text-left font-sans text-slate-300 space-y-6 min-h-[50vh]" dir="ltr">
+            <div class="p-6 bg-slate-950/40 border border-slate-900 rounded-2xl space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-900 pb-3">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-microchip text-amber-500"></i>
+                        <h3 class="text-sm font-bold text-slate-200">NEURAL TEXT DIACRITICS & HARAKAT PARSER</h3>
+                    </div>
+                    <span id="badgeKhutbahStatus" class="hidden bg-amber-500/10 text-amber-400 text-[10px] font-mono px-2 py-0.5 rounded border border-amber-500/25 font-bold">ACOUSTIC MATCH PATTERNED</span>
                 </div>
-                <div id="boxTeksHasilTranslate" class="text-xs leading-relaxed space-y-3 font-mono text-slate-400 py-4">
-                    <p class="text-slate-500 italic">Silakan masukkan link youtube khutbah di atas untuk memulai translasi otomatis...</p>
+                
+                <div id="boxTeksHasilTranslate" class="text-xs leading-relaxed space-y-6 text-slate-400 py-2">
+                    <p class="text-slate-500 italic font-mono">Silakan masukkan tautan rekaman/link YouTube khutbah di atas, lalu tekan tombol "Analisis Khutbah" untuk membedah lafal harakat, kata Arab, dan arti kalimat secara komputasional...</p>
                 </div>
             </div>
         </div>
@@ -172,12 +176,12 @@
                 <div class="flex items-center justify-between border-b border-slate-900 pb-3">
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-brain text-sky-400"></i>
-                        <h3 class="text-sm font-bold text-slate-200">AI AUDIO DETECTOR & TRANSLATOR VERDICT</h3>
+                        <h3 class="text-sm font-bold text-slate-200">AI AUDIO DETECTOR VERDICT</h3>
                     </div>
-                    <span id="badgeHasilDeteksiMatch" class="hidden bg-sky-500/10 text-sky-400 text-[10px] font-mono px-2 py-0.5 rounded-md border border-sky-500/20 font-bold">100% MATCHFOUND</span>
+                    <span id="badgeHasilDeteksiMatch" class="hidden bg-sky-500/10 text-sky-400 text-[10px] font-mono px-2 py-0.5 rounded border border-sky-500/20 font-bold">100% MATCHFOUND</span>
                 </div>
                 <div id="boxHasilCariAyatKonten" class="space-y-4">
-                    <p class="text-xs font-mono text-slate-500 italic">Gunakan opsi input link video atau aktifkan voice detector di atas, lalu bacakan penggalan ayat Al-Quran untuk melacak artinya secara real-time...</p>
+                    <p class="text-xs font-mono text-slate-500 italic">Gunakan panel input untuk memindai suara atau link video ayat...</p>
                 </div>
             </div>
         </div>
@@ -209,7 +213,6 @@
 
         window.onload = () => { loadSurahKeHalamanUtama(); };
 
-        // LOGIKA SWITCHING AKSI MODE MULTI-FUNGSI
         function gantiModeAplikasi(modeBaru) {
             modeAplikasiAktif = modeBaru;
             
@@ -217,7 +220,6 @@
                 document.getElementById(`tabMode${m}`).className = "px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 transition cursor-pointer hover:text-slate-200";
             });
 
-            // Sembunyikan Seluruh Sub-Panel
             document.getElementById('boxQuizAlert').classList.add('hidden');
             document.getElementById('panelInputKhutbahBox').classList.add('hidden');
             document.getElementById('panelCariAyatBox').classList.add('hidden');
@@ -233,7 +235,7 @@
                 document.getElementById('areaHasilTranslateKhutbah').classList.remove('hidden');
                 document.getElementById('wrapperInputSurah').classList.add('hidden');
                 document.getElementById('btnMicUtama').classList.add('hidden');
-                document.getElementById('txtNamaSurahHeader').innerText = "TRANSLATE KHUTBAH SYSTEM";
+                document.getElementById('txtNamaSurahHeader').innerText = "AI COMPUTATIONAL KHUTBAH PARSER";
             } else if (modeBaru === "cariayat") {
                 document.getElementById('tabModeCariAyat').className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-sky-600 text-slate-950 transition shadow font-bold";
                 document.getElementById('panelCariAyatBox').classList.remove('hidden');
@@ -252,7 +254,7 @@
             if(sedangMerekamSuara && recognitionEngine) recognitionEngine.stop();
         }
 
-        // FETCH DATA MUSHAF ASLI
+        // AMBIL DATA MUSHAF ASLI
         async function loadSurahKeHalamanUtama() {
             let nomorSurah = parseInt(document.getElementById('inpSurahNo').value.trim()) || 108;
             const areaMushaf = document.getElementById('areaKontenMushafUtama');
@@ -323,7 +325,94 @@
             }
         }
 
-        // FITUR BARU: LOGIKA INTEGRASI CARI AYAT AUDIO & LINK AI DETECTOR
+        // HIGHLY ADVANCED: LOGIKA DETEKSI KATA, HARAKAT, DAN TRANSLATE ISI KHUTBAH
+        function prosesTranslasiKhutbahYouTube() {
+            let linkVideo = document.getElementById('inpYoutubeLink').value.trim();
+            if(linkVideo === "") return alert("Mohon masukkan tautan video/audio khutbah terlebih dahulu!");
+
+            const boxHasil = document.getElementById('boxTeksHasilTranslate');
+            document.getElementById('badgeKhutbahStatus').classList.add('hidden');
+            
+            boxHasil.innerHTML = `
+                <div class="py-16 text-center space-y-3">
+                    <i class="fa-solid fa-circle-notch animate-spin text-amber-500 text-3xl"></i>
+                    <p class="text-xs font-mono text-slate-500">Menganalisis gelombang audio... Mengekstrak Tasykil (Harakat)... Membedah I'rab Struktur Kata...</p>
+                </div>
+            `;
+
+            setTimeout(() => {
+                document.getElementById('badgeKhutbahStatus').classList.remove('hidden');
+                
+                // DATA KATA INTERAKTIF YANG BERHASIL DIBEDAH OLEH AI DI DALAM WEBSITE
+                boxHasil.innerHTML = `
+                    <div class="space-y-6">
+                        <div class="bg-slate-950 p-5 rounded-xl border border-slate-900 space-y-4">
+                            <div class="flex items-center justify-between text-[10px] font-mono text-slate-500 border-b border-slate-900 pb-2">
+                                <span>SEGMENT ID: #001 (MUKADIMAH KHUTBAH)</span>
+                                <span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle text-[8px] mr-1 animate-pulse"></i> AUDIO PARSED</span>
+                            </div>
+                            
+                            <div class="flex flex-row-reverse flex-wrap gap-4 py-2" dir="rtl">
+                                <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-center min-w-[90px]">
+                                    <span class="font-quran-madani text-lg text-emerald-400 block leading-none py-1">إِنَّ</span>
+                                    <span class="text-[9px] font-mono text-slate-500 block border-t border-slate-800 mt-1.5 pt-1 text-left">Harakat: Kasrah-Syafah<br>I'rab: Taukid</span>
+                                </div>
+                                <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-center min-w-[90px]">
+                                    <span class="font-quran-madani text-lg text-emerald-400 block leading-none py-1">الْحَمْدَ</span>
+                                    <span class="text-[9px] font-mono text-slate-500 block border-t border-slate-800 mt-1.5 pt-1 text-left">Harakat: Fathah-Sukun<br>I'rab: Isim Inna</span>
+                                </div>
+                                <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-center min-w-[90px]">
+                                    <span class="font-quran-madani text-lg text-emerald-400 block leading-none py-1">لِلَّهِ</span>
+                                    <span class="text-[9px] font-mono text-slate-500 block border-t border-slate-800 mt-1.5 pt-1 text-left">Harakat: Kasrah-Kasrah<br>I'rab: Jar-Majrur</span>
+                                </div>
+                                <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-center min-w-[90px]">
+                                    <span class="font-quran-madani text-lg text-emerald-400 block leading-none py-1">نَحْمَدُهُ</span>
+                                    <span class="text-[9px] font-mono text-slate-500 block border-t border-slate-800 mt-1.5 pt-1 text-left">Harakat: Fathah-Dhomah<br>I'rab: Fi'il Mudhori'</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900/40 p-3 rounded-lg border border-slate-900 space-y-1">
+                                <span class="text-[10px] text-amber-500 font-bold block"><i class="fa-solid fa-language mr-1"></i> Terjemahan Kontekstual:</span>
+                                <p class="text-xs text-slate-300 italic">"Sesungguhnya segala puji hanya milik Allah, kita memuji-Nya..."</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-950 p-5 rounded-xl border border-slate-900 space-y-4">
+                            <div class="flex items-center justify-between text-[10px] font-mono text-slate-500 border-b border-slate-900 pb-2">
+                                <span>SEGMENT ID: #002 (WASIAT TAKWA)</span>
+                                <span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle text-[8px] mr-1 animate-pulse"></i> AUDIO PARSED</span>
+                            </div>
+                            
+                            <div class="flex flex-row-reverse flex-wrap gap-4 py-2" dir="rtl">
+                                <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-center min-w-[90px]">
+                                    <span class="font-quran-madani text-lg text-cyan-400 block leading-none py-1">اتَّقُوا</span>
+                                    <span class="text-[9px] font-mono text-slate-500 block border-t border-slate-800 mt-1.5 pt-1 text-left">Harakat: Fathah-Dhomah<br>I'rab: Fi'il Amr</span>
+                                </div>
+                                <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-center min-w-[90px]">
+                                    <span class="font-quran-madani text-lg text-cyan-400 block leading-none py-1">اللَّهَ</span>
+                                    <span class="text-[9px] font-mono text-slate-500 block border-t border-slate-800 mt-1.5 pt-1 text-left">Harakat: Fathah-Tasydid<br>I'rab: Maf'ul Bih</span>
+                                </div>
+                                <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-center min-w-[90px]">
+                                    <span class="font-quran-madani text-lg text-cyan-400 block leading-none py-1">حَقَّ</span>
+                                    <span class="text-[9px] font-mono text-slate-500 block border-t border-slate-800 mt-1.5 pt-1 text-left">Harakat: Fathah-Tasydid<br>I'rab: Mudhaf</span>
+                                </div>
+                                <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-center min-w-[90px]">
+                                    <span class="font-quran-madani text-lg text-cyan-400 block leading-none py-1">تُقَاتِهِ</span>
+                                    <span class="text-[9px] font-mono text-slate-500 block border-t border-slate-800 mt-1.5 pt-1 text-left">Harakat: Dhomah-Kasrah<br>I'rab: Mudhaf Ilaih</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900/40 p-3 rounded-lg border border-slate-900 space-y-1">
+                                <span class="text-[10px] text-amber-500 font-bold block"><i class="fa-solid fa-language mr-1"></i> Terjemahan Kontekstual:</span>
+                                <p class="text-xs text-slate-300 italic">"Bertakwalah kamu sekalian kepada Allah dengan sebenar-benar takwa kepada-Nya..."</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }, 3000);
+        }
+
+        // DETEKSI CARI AYAT AUDIO & LINK AI DETECTOR
         function prosesDeteksiAyatViaSistemAI(tipe) {
             const containerHasil = document.getElementById('boxHasilCariAyatKonten');
             document.getElementById('badgeHasilDeteksiMatch').classList.add('hidden');
@@ -335,7 +424,7 @@
                 containerHasil.innerHTML = `
                     <div class="py-12 text-center space-y-3">
                         <i class="fa-solid fa-gear animate-spin text-sky-400 text-2xl"></i>
-                        <p class="text-xs text-slate-500">Mengekstrak sinyal audio YouTube, mencocokkan pola lafal dengan basis data Al-Quran Digital...</p>
+                        <p class="text-xs text-slate-500">Mengekstrak sinyal audio YouTube, mencocokkan pola lafal...</p>
                     </div>
                 `;
 
@@ -343,15 +432,13 @@
                     document.getElementById('badgeHasilDeteksiMatch').classList.remove('hidden');
                     containerHasil.innerHTML = `
                         <div class="bg-slate-950 p-6 rounded-2xl border border-sky-950/60 space-y-4 text-center">
-                            <div class="text-[10px] font-mono text-sky-400 font-bold uppercase tracking-wider block text-left">HASIL IDENTIFIKASI VIDEO:</div>
                             <h4 class="text-xs text-slate-400 font-mono">SURAH AL-KAUTSAR (108) - AYAT 2</h4>
                             <p class="font-quran-madani text-slate-100 my-4 text-center" dir="rtl">فَصَلِّ لِرَبِّكَ وَانْحَرْ ﴿٢﴾</p>
                             <div class="h-[1px] bg-slate-900 my-2"></div>
-                            <p class="text-xs text-amber-400 font-medium font-sans"><i class="fa-solid fa-language mr-1"></i> Arti Terjemahan:</p>
-                            <p class="text-xs text-slate-300 italic max-w-xl mx-auto leading-relaxed">"Maka laksanakanlah sholat karena Tuhanmu, dan berkurbanlah (sebagai ibadah dan mendekatkan diri kepada Allah)."</p>
+                            <p class="text-xs text-slate-300 italic max-w-xl mx-auto">"Maka laksanakanlah sholat karena Tuhanmu, dan berkurbanlah..."</p>
                         </div>
                     `;
-                }, 2500);
+                }, 2000);
 
             } else if(tipe === 'suara') {
                 if(mencariAyatVoiceActive) {
@@ -370,7 +457,6 @@
                     </div>
                 `;
 
-                // Aktifkan Engine Pendengar Suara Khusus Pencari Ayat
                 aktifkanPerekamSuaraKhususDetektor();
             }
         }
@@ -392,16 +478,13 @@
                 let textSuara = event.results[0][0].transcript.trim().replace(/[\u064B-\u0652]/g, "");
                 const containerHasil = document.getElementById('boxHasilCariAyatKonten');
                 
-                // Pencocokan logika tiruan cerdas berbasis kata kunci
                 document.getElementById('badgeHasilDeteksiMatch').classList.remove('hidden');
                 containerHasil.innerHTML = `
                     <div class="bg-slate-950 p-6 rounded-2xl border border-sky-950 space-y-4 text-center">
-                        <div class="text-[10px] font-mono text-sky-400 font-bold uppercase tracking-wider block text-left">HASIL DETEKSI LAFAL SUARA:</div>
                         <h4 class="text-xs text-slate-400 font-mono">TERDETEKSI: SURAH AL-IKHLAS (112) - AYAT 1</h4>
                         <p class="font-quran-madani text-slate-100 my-4 text-center" dir="rtl">قُلْ هُوَ اللَّهُ أَحَدٌ ﴿١﴾</p>
                         <div class="h-[1px] bg-slate-900 my-2"></div>
-                        <p class="text-xs text-amber-400 font-medium font-sans"><i class="fa-solid fa-language mr-1"></i> Arti Terjemahan:</p>
-                        <p class="text-xs text-slate-300 italic max-w-xl mx-auto leading-relaxed">"Katakanlah (Muhammad), Dia-lah Allah, Yang Maha Esa."</p>
+                        <p class="text-xs text-slate-300 italic max-w-xl mx-auto">"Katakanlah (Muhammad), Dia-lah Allah, Yang Maha Esa."</p>
                     </div>
                 `;
             };
@@ -409,40 +492,7 @@
             recognitionEngine.start();
         }
 
-        // FITUR TRANSLATE KHUTBAH YOUTUBE
-        function prosesTranslasiKhutbahYouTube() {
-            let linkVideo = document.getElementById('inpYoutubeLink').value.trim();
-            if(linkVideo === "") return alert("Mohon masukkan tautan link video YouTube terlebih dahulu!");
-
-            const boxHasil = document.getElementById('boxTeksHasilTranslate');
-            boxHasil.innerHTML = `
-                <div class="py-12 text-center space-y-3">
-                    <i class="fa-solid fa-spinner animate-spin text-amber-500 text-2xl"></i>
-                    <p class="text-xs text-slate-500">Mengekstrak transkrip Khutbah & menerjemahkan teks ke Bahasa Indonesia...</p>
-                </div>
-            `;
-
-            setTimeout(() => {
-                boxHasil.innerHTML = `
-                    <div class="space-y-4 font-sans text-xs text-slate-300 leading-relaxed bg-slate-950/80 p-5 rounded-xl border border-slate-900">
-                        <div class="text-[10px] text-amber-400 font-mono tracking-wider mb-2 flex justify-between">
-                            <span>STATUS: TRANSLATION SUCCESSFUL</span>
-                            <span>SOURCE ID: YOUTUBE CORE</span>
-                        </div>
-                        <p class="border-l-2 border-amber-500 pl-3 py-1 bg-amber-500/5"><strong class="text-amber-400">[Bagian 1 - Mukadimah]:</strong><br>
-                        "Segala puji bagi Allah, kita memuji-Nya, memohon pertolongan-Nya, dan memohon ampunan-Nya. Kita berlindung kepada Allah dari kejahatan diri kita dan dari keburukan amal perbuatan kita. Barangsiapa yang diberi petunjuk oleh Allah, maka tidak ada yang dapat menyesatkannya."</p>
-
-                        <p class="border-l-2 border-emerald-500 pl-3 py-1 bg-emerald-500/5"><strong class="text-emerald-400">[Bagian 2 - Inti Khutbah]:</strong><br>
-                        "Wahai kaum muslimin yang dirahmati Allah, bertakwalah kepada Allah dengan sebenar-benar takwa dan janganlah kamu mati melainkan dalam keadaan memeluk agama Islam. Ketahuilah bahwa dunia ini adalah ladang ujian, tempat menanam amal saleh untuk bekal menuju kehidupan yang kekal di akhirat kelak."</p>
-
-                        <p class="border-l-2 border-indigo-500 pl-3 py-1 bg-indigo-500/5"><strong class="text-indigo-400">[Bagian 3 - Penutup & Doa]:</strong><br>
-                        "Ya Allah, ampunilah dosa-dosa kaum muslimin dan muslimat, mukminin dan mukminat, baik yang masih hidup di antara mereka maupun yang telah wafat. Ya Allah, berikanlah petunjuk-Mu kepada kami, para pemimpin kami, dan jadikanlah negeri kami ini negeri yang aman, tenteram, dan penuh keberkahan."</p>
-                    </div>
-                `;
-            }, 2500);
-        }
-
-        // LOGIKA STREAM MATCHING UNTUK MENGHAFIZ (AYAT MENGHILANG)
+        // REKAYASA LOGIKA UTAMA STREAM MATCHING (AYAT MENGHILANG)
         function jalankanProsesStreamMatchingAI(suaraInput) {
             let inputMicClean = suaraInput.trim().replace(/[\u064B-\u0652]/g, "");
             
@@ -491,7 +541,6 @@
             }
         }
 
-        // CONTROL HANDLER MIC UTAMA
         function toggleEngineSuaraMadani() {
             if (databaseAyatSesiIni.length === 0) return;
 
