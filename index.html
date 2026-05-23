@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarteel Quran Madani - Stream Engine v4.0</title>
+    <title>Tarteel Quran Madani - Stream Engine v4.5</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,7 +12,6 @@
     <link href="https://fonts.cdnfonts.com/css/kfgqpc-uthman-taha-naskh-standard" rel="stylesheet">
     
     <style>
-        /* FONT MUSHAF MADINAH ASLI */
         .font-quran-madani { 
             font-family: 'KFGQPC Uthman Taha Naskh Standard', 'Noto Sans Arabic', serif; 
             font-size: 2.6rem; 
@@ -21,7 +20,7 @@
         }
         .font-sans-custom { font-family: 'Plus Jakarta Sans', sans-serif; }
         
-        /* STATE BENAR-BENAR MENGHILANG (GAIB TOTAL DI HALAMAN UTAMA) */
+        /* STATE MENGHILANG TOTAL (TRUE INVISIBLE) */
         .state-invisible-mushaf { 
             color: transparent !important; 
             text-shadow: 0 0 45px rgba(255,255,255,0);
@@ -30,15 +29,20 @@
             transition: color 0.5s ease, text-shadow 0.5s ease;
         }
         
-        /* AYAT MUNCUL SATU PER SATU SAAT DIBACA */
+        /* AYAT MUNCUL SATU PER SATU */
         .state-visible-mushaf { 
             color: #e2e8f0 !important; 
             opacity: 1 !important; 
             background: transparent;
             transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        } 
+        }
 
-        /* ORNAMEN NOMOR AYAT GEOMETRIS */
+        /* HIGHLIGHT KHUSUS UNTUK MODE MEMBACA / FOKUS */
+        .state-read-mode {
+            color: #94a3b8 !important;
+            transition: all 0.3s ease;
+        }
+
         .quran-ayah-frame {
             display: inline-flex;
             align-items: center;
@@ -57,7 +61,7 @@
             top: 0;
             left: 0;
             fill: none;
-            stroke: #334155;
+            stroke: #1e293b;
             stroke-width: 1.5;
         }
         
@@ -68,7 +72,7 @@
 </head>
 <body class="bg-[#090d16] text-slate-100 font-sans-custom min-h-screen antialiased flex flex-col justify-between">
 
-    <nav class="bg-[#0f172a]/80 backdrop-blur border-b border-slate-900 sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-lg">
+    <nav class="bg-[#0f172a]/90 backdrop-blur border-b border-slate-900 sticky top-0 z-50 px-6 py-3 flex justify-between items-center shadow-lg">
         <div class="flex items-center gap-3">
             <div class="flex gap-2">
                 <input type="number" id="inpSurahNo" value="108" min="1" max="114" class="w-14 bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-center font-bold text-xs font-mono text-emerald-400 focus:outline-none focus:border-emerald-500">
@@ -77,13 +81,39 @@
             <span id="txtNamaSurahHeader" class="text-xs font-bold tracking-wider text-slate-400 uppercase font-mono ml-2">Loading...</span>
         </div>
         
-        <button id="btnMicUtama" onclick="toggleEngineSuaraMadani()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer shadow-md shadow-emerald-900/20">
+        <button id="btnMicUtama" onclick="toggleEngineSuaraMadani()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer shadow-md">
             <i id="iconMic" class="fa-solid fa-microphone"></i> <span id="txtStatusMic">Mulai Mengaji</span>
         </button>
     </nav>
 
+    <div class="w-full max-w-4xl mx-auto px-6 pt-6">
+        <div class="flex flex-col sm:flex-row justify-between items-center border-b border-slate-900 pb-4 gap-3">
+            <span class="text-[10px] font-mono tracking-widest text-slate-500 uppercase font-bold"><i class="fa-solid fa-sliders mr-1.5"></i> Pilih Mode Menghafal:</span>
+            
+            <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800/60 shadow-inner">
+                <button id="tabModeRead" onclick="gantiModeAplikasi('read')" class="px-4 py-1.5 rounded-lg text-xs font-bold text-slate-400 transition cursor-pointer hover:text-slate-200">
+                    Mau Melihat Teks
+                </button>
+                <div class="w-[1px] bg-slate-800 my-1.5 mx-0.5"></div> <button id="tabModeHide" onclick="gantiModeAplikasi('hide')" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white transition shadow cursor-pointer">
+                    Ayat Menghilang
+                </button>
+                <div class="w-[1px] bg-slate-800 my-1.5 mx-0.5"></div> <button id="tabModeQuiz" onclick="gantiModeAplikasi('quiz')" class="px-4 py-1.5 rounded-lg text-xs font-bold text-slate-400 transition cursor-pointer hover:text-slate-200">
+                    Quiz
+                </button>
+            </div>
+        </div>
+
+        <div id="boxQuizAlert" class="mt-4 bg-amber-500/10 border border-amber-500/20 px-4 py-3 rounded-xl hidden flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <i class="fa-solid fa-circle-question text-amber-400 text-xs"></i>
+                <span id="txtQuizPrompt" class="text-xs font-bold text-amber-300">Target Quiz: Memilih target acak...</span>
+            </div>
+            <button onclick="loadSurahKeHalamanUtama()" class="text-[10px] font-bold text-slate-400 underline hover:text-slate-200 uppercase tracking-wider">Acak Ulang</button>
+        </div>
+    </div>
+
     <main class="flex-1 max-w-4xl w-full mx-auto p-6 md:p-12 text-right select-none overflow-y-auto mushaf-scroll-area" dir="rtl">
-        <div id="areaKontenMushafUtama" class="font-quran-madani text-justify whitespace-normal leading-[6rem] min-h-[65vh]">
+        <div id="areaKontenMushafUtama" class="font-quran-madani text-justify whitespace-normal leading-[6rem] min-h-[55vh]">
             </div>
     </main>
 
@@ -93,7 +123,6 @@
     </footer>
 
     <script>
-        // Bingkai Ornamen Lingkaran Ayat Vektor
         const frameNomorAyatVektor = `
             <svg class="quran-frame-svg" viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r="38" stroke="#1e293b" stroke-width="1.5" fill="none"/>
@@ -106,9 +135,32 @@
         let databaseAyatSesiIni = [];
         let recognitionEngine;
         let sedangMerekamSuara = false;
-        let pointerAyatAktif = 0; // Index penunjuk urutan ayat saat ini
+        let pointerAyatAktif = 0;
+        let modeAplikasiAktif = "hide"; 
+        let objekTargetQuizSesiIni = null;
 
         window.onload = () => { loadSurahKeHalamanUtama(); };
+
+        // FUNGSI KHUSUS GANTI MODE INTERAKTIF
+        function gantiModeAplikasi(modeBaru) {
+            modeAplikasiAktif = modeBaru;
+            
+            // Reset style tombol tab menu
+            ["Read", "Hide", "Quiz"].forEach(m => {
+                document.getElementById(`tabMode${m}`).className = "px-4 py-1.5 rounded-lg text-xs font-bold text-slate-400 transition cursor-pointer hover:text-slate-200";
+            });
+            const idKapital = modeBaru.charAt(0).toUpperCase() + modeBaru.slice(1);
+            document.getElementById(`tabMode${idKapital}`).className = "px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white transition shadow cursor-pointer";
+            
+            if(modeBaru === "quiz") {
+                document.getElementById('boxQuizAlert').classList.remove('hidden');
+            } else {
+                document.getElementById('boxQuizAlert').classList.add('hidden');
+            }
+
+            if(sedangMerekamSuara && recognitionEngine) recognitionEngine.stop();
+            loadSurahKeHalamanUtama();
+        }
 
         // PENGUNDUH DATA MUSHAF ASLI
         async function loadSurahKeHalamanUtama() {
@@ -127,104 +179,119 @@
                     let surahData = dataJson.data[0];
                     document.getElementById('txtNamaSurahHeader').innerText = `${surahData.number}. ${surahData.englishName} (${surahData.numberOfAyahs} AYAT)`;
 
-                    let htmlBuilder = "";
-                    
-                    // Ornamen Kepala Surah Banner
-                    htmlBuilder += `
-                        <div class="w-full my-8 block text-center select-none" dir="ltr">
-                            <div class="inline-block relative w-full max-w-md p-5 rounded-2xl border border-slate-900 bg-slate-950/60 shadow-2xl">
-                                <span class="text-[10px] font-mono tracking-widest text-emerald-500 uppercase font-bold block mb-1">سُورَةُ</span>
-                                <h2 class="text-xl font-bold font-sans text-slate-200">${surahData.englishName}</h2>
-                                <p class="text-xl font-quran-madani text-slate-500 my-1" dir="rtl">${surahData.name}</p>
-                            </div>
-                            <div class="w-full text-center my-8 block font-quran-madani text-slate-200 text-2xl" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
-                        </div>
-                    `;
-
                     surahData.ayahs.forEach((ayah) => {
                         let teksBersihHarakat = ayah.text;
-                        
-                        // Potong Bismillah di awal ayat pertama selain Al-Fatihah & At-Taubah
                         if(ayah.numberInSurah === 1 && nomorSurah !== 1 && nomorSurah !== 9 && teksBersihHarakat.startsWith("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ")) {
                             teksBersihHarakat = teksBersihHarakat.replace("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ", "");
                         }
 
                         databaseAyatSesiIni.push({
                             nomor: ayah.numberInSurah,
-                            teksRawCocok: teksBersihHarakat.replace(/[\u064B-\u0652]/g, "").trim(), // Hilangkan harakat untuk dicocokkan dengan mic capture
+                            teksRawCocok: teksBersihHarakat.replace(/[\u064B-\u0652]/g, "").trim(),
                             teksAsliMadani: teksBersihHarakat
                         });
-
-                        // Set default seluruh ayat ke 'state-invisible-mushaf' (Benar-benar menghilang di halaman utama)
-                        htmlBuilder += `
-                            <span id="text-madani-id-${ayah.numberInSurah}" class="state-invisible-mushaf inline">${teksBersihHarakat}</span>
-                            <span id="frame-madani-id-${ayah.numberInSurah}" class="quran-ayah-frame opacity-0">${frameNomorAyatVektor}<span class="absolute font-sans text-[11px] font-bold text-slate-500 z-10">${ayah.numberInSurah}</span></span>
-                        `;
                     });
 
-                    areaMushaf.innerHTML = htmlBuilder;
-                    if(sedangMerekamSuara && recognitionEngine) recognitionEngine.stop();
+                    // JALANKAN LOGIKA RENDERING SESUAI SELEKSI TAB MODE YANG DIPILIH
+                    renderTampilanSesuaiMode(areaMushaf, surahData.name, surahData.englishName);
                 }
             } catch (kegagalan) {
                 areaMushaf.innerHTML = `<div class="text-center py-16 text-red-500 text-xs font-mono" dir="ltr">Koneksi API Gagal. Sila coba klik tombol 'Buka' lagi.</div>`;
             }
         }
 
-        // BARU: LOGIKA SCANNING KARAKTER MENGALIR (STREAM CHAR MATCHING)
+        function renderTampilanSesuaiMode(targetContainer, namaArab, namaInggris) {
+            let htmlBuilder = `
+                <div class="w-full my-6 block text-center select-none" dir="ltr">
+                    <h2 class="text-xl font-bold font-sans text-slate-300 tracking-wide">${namaInggris}</h2>
+                    <p class="text-xl font-quran-madani text-slate-500 my-0.5" dir="rtl">${namaArab}</p>
+                    <div class="w-full text-center my-6 block font-quran-madani text-slate-200 text-2xl" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+                </div>
+            `;
+
+            if(modeAplikasiAktif === "quiz") {
+                let acakIndex = Math.floor(Math.random() * databaseAyatSesiIni.length);
+                objekTargetQuizSesiIni = databaseAyatSesiIni[acakIndex];
+                document.getElementById('txtQuizPrompt').innerText = `Sila lafalkan Ayat ke-${objekTargetQuizSesiIni.nomor} untuk memunculkannya!`;
+
+                databaseAyatSesiIni.forEach(ayah => {
+                    let isQuizTarget = (ayah.nomor === objekTargetQuizSesiIni.nomor);
+                    htmlBuilder += `
+                        <span id="text-madani-id-${ayah.nomor}" class="${isQuizTarget ? 'state-invisible-mushaf' : 'state-visible-mushaf opacity-40'} inline">${ayah.teksAsliMadani}</span>
+                        <span id="frame-madani-id-${ayah.nomor}" class="quran-ayah-frame ${isQuizTarget ? 'opacity-0' : 'opacity-40'}">${frameNomorAyatVektor}<span class="absolute font-sans text-[11px] font-bold text-slate-500 z-10">${ayah.nomor}</span></span>
+                    `;
+                });
+            } else if(modeAplikasiAktif === "read") {
+                // MODE MELIHAT TEKS: SEMUA MUNCUL SEJAK AWAL
+                databaseAyatSesiIni.forEach(ayah => {
+                    htmlBuilder += `
+                        <span id="text-madani-id-${ayah.nomor}" class="state-read-mode inline">${ayah.teksAsliMadani}</span>
+                        <span id="frame-madani-id-${ayah.nomor}" class="quran-ayah-frame opacity-100">${frameNomorAyatVektor}<span class="absolute font-sans text-[11px] font-bold text-slate-400 z-10">${ayah.nomor}</span></span>
+                    `;
+                });
+            } else {
+                // MODE AYAT MENGHILANG: GAIB TOTAL DI AWAL SEMUA
+                databaseAyatSesiIni.forEach(ayah => {
+                    htmlBuilder += `
+                        <span id="text-madani-id-${ayah.nomor}" class="state-invisible-mushaf inline">${ayah.teksAsliMadani}</span>
+                        <span id="frame-madani-id-${ayah.nomor}" class="quran-ayah-frame opacity-0">${frameNomorAyatVektor}<span class="absolute font-sans text-[11px] font-bold text-slate-500 z-10">${ayah.nomor}</span></span>
+                    `;
+                });
+            }
+
+            targetContainer.innerHTML = htmlBuilder;
+        }
+
+        // STREAM MATCHING SCANNING AI ENGINE
         function jalankanProsesStreamMatchingAI(suaraInput) {
-            // Bersihkan teks tangkapan microphone dari harakat arab standar
             let inputMicClean = suaraInput.trim().replace(/[\u064B-\u0652]/g, "");
             
-            // Jendela scan dinamis: Memeriksa ayat aktif sekarang hingga 2 tingkat ayat di depannya
-            let indexBatasMaksimalPindai = Math.min(pointerAyatAktif + 2, databaseAyatSesiIni.length - 1);
+            if(modeAplikasiAktif === "quiz") {
+                let teksKunciQuiz = objekTargetQuizSesiIni.teksRawCocok;
+                if(inputMicClean.includes(teksKunciQuiz.substring(0, 6)) || hitungKecocokanSubString(inputMicClean, teksKunciQuiz)) {
+                    buatAyatMenjadiMunculDiLayar(objekTargetQuizSesiIni.nomor);
+                    if(recognitionEngine) recognitionEngine.stop();
+                }
+            } else if(modeAplikasiAktif === "hide") {
+                let indexBatasMaksimalPindai = Math.min(pointerAyatAktif + 2, databaseAyatSesiIni.length - 1);
 
-            for (let i = pointerAyatAktif; i <= indexBatasMaksimalPindai; i++) {
-                let targetAyatObj = databaseAyatSesiIni[i];
-                let teksKunciKoreksi = targetAyatObj.teksRawCocok;
+                for (let i = pointerAyatAktif; i <= indexBatasMaksimalPindai; i++) {
+                    let targetAyatObj = databaseAyatSesiIni[i];
+                    let teksKunciKoreksi = targetAyatObj.teksRawCocok;
 
-                // Ambil 5 karakter pertama dan 5 karakter terakhir dari ayat target untuk verifikasi jangkar
-                let potonganAwalAyat = teksKunciKoreksi.substring(0, 6);
-                let potonganAkhirAyat = teksKunciKoreksi.substring(teksKunciKoreksi.length - 6);
+                    let potonganAwalAyat = teksKunciKoreksi.substring(0, 6);
+                    let potonganAkhirAyat = teksKunciKoreksi.substring(teksKunciKoreksi.length - 6);
 
-                // JIKA input suara mengandung potongan potongan huruf dari ayat target tersebut, LOLOSKAN!
-                if (inputMicClean.includes(potonganAwalAyat) || inputMicClean.includes(potonganAkhirAyat) || hitungKecocokanSubString(inputMicClean, teksKunciKoreksi)) {
-                    
-                    // Munculkan ayat-ayat yang terlewati/berhasil dibaca satu per satu ke halaman utama
-                    for(let j = pointerAyatAktif; j <= i; j++) {
-                        buatAyatMenjadiMunculDiLayar(databaseAyatSesiIni[j].nomor);
+                    if (inputMicClean.includes(potonganAwalAyat) || inputMicClean.includes(potonganAkhirAyat) || hitungKecocokanSubString(inputMicClean, teksKunciKoreksi)) {
+                        for(let j = pointerAyatAktif; j <= i; j++) {
+                            buatAyatMenjadiMunculDiLayar(databaseAyatSesiIni[j].nomor);
+                        }
+                        pointerAyatAktif = i + 1;
+                        break;
                     }
-                    
-                    // Geser penunjuk urutan aktif langsung ke baris ayat selanjutnya
-                    pointerAyatAktif = i + 1;
-                    break;
                 }
             }
         }
 
-        // Fungsi pembantu mengecek apakah ada frasa kata yang beririsan di dalam stream mic
         function hitungKecocokanSubString(mic, target) {
             let kataTarget = target.split(' ');
             let ditemukan = 0;
-            // Ambil potongan teks mic paling akhir untuk dicocokkan
             kataTarget.forEach(kata => { if(mic.includes(kata)) ditemukan++; });
-            return (ditemukan / kataTarget.length) >= 0.35; // Cukup 35% kata cocok, anggap lolos demi kelancaran membaca
+            return (ditemukan / kataTarget.length) >= 0.35;
         }
 
-        // AKSI MEMUNCULKAN TEKS AYAT SATU PER SATU
         function buatAyatMenjadiMunculDiLayar(nomorAyat) {
             const elemenTeks = document.getElementById(`text-madani-id-${nomorAyat}`);
             const elemenFrame = document.getElementById(`frame-madani-id-${nomorAyat}`);
 
-            if (elemenTeks && elemenTeks.classList.contains('state-invisible-mushaf')) {
+            if (elemenTeks && (elemenTeks.classList.contains('state-invisible-mushaf') || modeAplikasiAktif === 'quiz')) {
                 elemenTeks.className = "state-visible-mushaf inline";
                 if(elemenFrame) elemenFrame.className = "quran-ayah-frame opacity-100";
-                
-                // Gulir halaman mushaf secara halus mengikuti ayat baru yang muncul
                 elemenTeks.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
 
-        // PENGATUR MIC DAN AUDIO STREAM
+        // MIC AUDIO CONTROLLER
         function toggleEngineSuaraMadani() {
             if (databaseAyatSesiIni.length === 0) return;
 
@@ -262,10 +329,11 @@
             if(sedangMerekamSuara) {
                 recognitionEngine.stop();
             } else {
-                // Reset ulang halaman utama menjadi kosong kembali setiap kali tombol mic ditekan ulang
-                loadSurahKeHalamanUtama().then(() => {
+                if(modeAplikasiAktif !== "quiz") {
+                    loadSurahKeHalamanUtama().then(() => { recognitionEngine.start(); });
+                } else {
                     recognitionEngine.start();
-                });
+                }
             }
         }
     </script>
